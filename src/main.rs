@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]  // Preventing console open on windows
+#![windows_subsystem = "windows"] // Preventing console open on windows
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -7,25 +7,26 @@ use slint::{Timer, TimerMode};
 
 mod app;
 use app::AppState;
-use app::POMODORO_DURATION_MS;
 
 slint::include_modules!();
-
 
 fn main() -> Result<(), slint::PlatformError> {
     // Create ui and timer
     let ui = MainWindow::new()?;
     let timer = Rc::new(Timer::default());
-    
+
     // Create app state with Rc and RefCell
     let app_state = Rc::new(RefCell::new(AppState::new()));
 
-    // Init ui with default values
-    ui.set_remaining_seconds(POMODORO_DURATION_MS / 1000);
-    ui.set_current_state_text("Work".into());
+    // Init ui with default values from AppState
+    {
+        let state = app_state.borrow();
+        ui.set_remaining_seconds(state.remaining_seconds());
+        ui.set_current_state_text(state.state_label());
+    }
 
     // Pointers for Start/Pause button
-    let app_state_for_start_pause: Rc<RefCell<AppState>> = app_state.clone();
+    let app_state_for_start_pause = app_state.clone();
     let ui_handle_for_start_pause = ui.as_weak();
     let timer_for_start_pause = timer.clone();
 
@@ -33,23 +34,27 @@ fn main() -> Result<(), slint::PlatformError> {
     ui.on_start_pause_clicked(move || {
         let ui = ui_handle_for_start_pause.unwrap();
         let is_active = ui.get_timer_active();
-        ui.set_timer_active(!is_active);
 
         if is_active {
-            timer_for_start_pause.stop();
+            app_state_for_start_pause
+                .borrow_mut()
+                .pause_timer(&ui, &timer_for_start_pause);
         } else {
+            app_state_for_start_pause.borrow_mut().start_timer(&ui);
+
             let app_state_for_tick = app_state_for_start_pause.clone();
             let ui_handle_for_tick = ui_handle_for_start_pause.clone();
             let timer_for_tick = timer_for_start_pause.clone();
 
             timer_for_start_pause.start(
-                TimerMode::Repeated, 
-                Duration::from_millis(100), 
+                TimerMode::Repeated,
+                Duration::from_millis(100),
                 move || {
                     app_state_for_tick
                         .borrow_mut()
                         .tick(&ui_handle_for_tick.unwrap(), &timer_for_tick);
-                });
+                },
+            );
         }
     });
 
@@ -70,7 +75,7 @@ fn main() -> Result<(), slint::PlatformError> {
     let ui_handle_for_skip = ui.as_weak();
     let timer_for_skip = timer.clone();
 
-    // Handler for Reset button
+    // Handler for Skip button
     ui.on_skip_clicked(move || {
         app_state_for_skip
             .borrow_mut()
