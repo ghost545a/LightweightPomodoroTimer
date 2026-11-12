@@ -1,39 +1,35 @@
-# Pomodoro Timer
+# Lightweight Pomodoro Timer
 
-<img width="417" height="337" alt="изображение" src="https://github.com/user-attachments/assets/c3f1cd2f-4114-43fc-8418-7cb15453c5a2" />
+<img width="417" height="337" alt="Pomodoro Timer Screenshot" src="https://github.com/user-attachments/assets/c3f1cd2f-4114-43fc-8418-7cb15453c5a2" />
 
-
-A simple, beautiful, and resource-efficient Pomodoro timer built with Rust and the [Slint](https://slint-ui.com/) UI toolkit.
-
-This application is fully cross-platform and is automatically built for Windows, macOS, and Linux on every new release.
+A fast, minimalist, and resource-efficient Pomodoro timer built with Rust and the [Slint](https://slint.dev/) UI toolkit, maintained by [@ghost545a](https://github.com/ghost545a).
 
 ## Features
 
-- Standard Pomodoro cycles: Work, Short Break, and Long Break.
-- Start, pause, and reset the timer.
-- Skip the current session to move to the next one.
-- Clean, minimalist user interface.
-- Low memory and CPU usage, especially in the release build.
+- **Standard Pomodoro Cycles:** Work (`25:00`), Short Break (`05:00`), and Long Break (`15:00` after every 4th work session) with live cycle progress (`1/4` – `4/4`).
+- **Accurate Timer Controls:** Start, pause, resume, reset, and skip sessions without timer drift or pause/resume jumps.
+- **Ultra-Lightweight Footprint:** Uses Slint's CPU software renderer and compacted vector assets (`<2 KB` icon, `~2.7 MB` standalone executable) for minimal RAM and CPU usage.
+- **Clean, Distraction-Free UI:** Crisp dark theme with zero-padded countdown display and tactile icon buttons.
 
 ## Downloading the Application
 
-The easiest way to get the application is to download a pre-built version for your operating system from the **[Releases](https://github.com/reRumbl/LightweightPomodoroTimer/releases)** page.
+Download the latest pre-built Windows executable (`PomodoroTimer.exe` or `.zip`) directly from the **[Releases](https://github.com/ghost545a/LightweightPomodoroTimer/releases)** page.
 
 > **Note for Windows users:**
-> Windows SmartScreen might show a warning because the application is not digitally signed. This is expected for small, independent projects. You will need to click "More info" -> "Run anyway" to start the application.
+> Windows SmartScreen might show a warning because the application is not digitally signed. Click **"More info"** -> **"Run anyway"** to start the application.
 
 ## Building from Source
 
-If you prefer to build the application yourself, you'll need to have the Rust toolchain installed.
+ Make sure you have the [Rust toolchain](https://rustup.rs/) installed.
 
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/reRumbl/LightweightPomodoroTimer.git
+    git clone https://github.com/ghost545a/LightweightPomodoroTimer.git
     cd LightweightPomodoroTimer
     ```
 
-2. **Install dependencies (for Linux only):**
+2. **Install dependencies (Linux only):**
 
     ```bash
     sudo apt-get update && sudo apt-get install -y libfontconfig1-dev libgtk-3-dev
@@ -47,11 +43,22 @@ If you prefer to build the application yourself, you'll need to have the Rust to
     cargo run
     ```
 
-    For a fully optimized release build (recommended for regular use):
+    For a fully optimized release build (recommended):
 
     ```bash
     cargo run --release
     ```
+
+4. **Run unit tests:**
+
+    ```bash
+    cargo test
+    ```
+
+## Acknowledgments
+
+- Original project created by **[reRumbl](https://github.com/reRumbl)** ([reRumbl/LightweightPomodoroTimer](https://github.com/reRumbl/LightweightPomodoroTimer)).
+- Enhanced, debugged, and optimized in this fork by **[ghost545a](https://github.com/ghost545a)**.
 
 ## License
 
